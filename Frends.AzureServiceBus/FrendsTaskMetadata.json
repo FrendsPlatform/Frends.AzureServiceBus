@@ -1,0 +1,10 @@
+﻿{
+  "Tasks": [
+    {
+      "TaskMethod": "Frends.AzureServiceBus.ServiceBus.Send"
+    },
+    {
+      "TaskMethod": "Frends.AzureServiceBus.ServiceBus.Read"
+    }
+  ]
+}

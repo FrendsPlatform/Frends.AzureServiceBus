@@ -166,7 +166,7 @@ namespace Frends.AzureServiceBus.Tests
             
             await _managementClient.CreateQueueAsync(_queueName);
             // UTF-16 content without content type header
-            await (new QueueClient(_connectionString, _queueName)).SendAsync(new Message(Encoding.Unicode.GetBytes(data)));
+            await (new QueueClient(_connectionString, _queueName)).SendAsync(new Message(ServiceBus.SerializeObject<byte[]>(Encoding.Unicode.GetBytes(data))));
 
             // receive and override
             var msg = await ReceiveMessage(_queueName, subscriptionName: _subscriptionName, queueOrSubscription: QueueOrSubscription.Queue, serializationType: BodySerializationType.ByteArray, predefinedEncoding: Encoding.Unicode);

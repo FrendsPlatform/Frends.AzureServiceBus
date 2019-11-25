@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -13,6 +14,7 @@ using Microsoft.Azure.ServiceBus.InteropExtensions;
 using Microsoft.Azure.ServiceBus.Management;
 
 
+[assembly:InternalsVisibleTo("Frends.AzureServiceBus.Tests")]
 namespace Frends.AzureServiceBus
 {
     /// <summary>
@@ -232,7 +234,7 @@ namespace Frends.AzureServiceBus
             }
         }
 
-        private static byte[] SerializeObject<T>(object serializableObject)
+        internal static byte[] SerializeObject<T>(object serializableObject)
         {
             var serializer = DataContractBinarySerializer<T>.Instance;
             if (serializableObject == null)
@@ -341,9 +343,14 @@ namespace Frends.AzureServiceBus
             Encoding encoding = GetEncodingFromContentType(msg.ContentType, GetEncoding(options.DefaultEncoding, options.EncodingName));
 
             // Body is a byte array
-            if (options.BodySerializationType == BodySerializationType.ByteArray || options.BodySerializationType == BodySerializationType.Stream)
+            if (options.BodySerializationType == BodySerializationType.ByteArray)
             {
-                // Stream and byte arrays handled the same way, option kept in for parity with old Frends.ServiceBus task
+                var messageBytes = msg.GetBody<byte[]>();
+                return messageBytes == null ? null : encoding.GetString(messageBytes);
+            }
+
+            if (options.BodySerializationType == BodySerializationType.Stream)
+            {
                 var messageBytes = msg.Body;
                 return messageBytes == null ? null : encoding.GetString(messageBytes);
             }

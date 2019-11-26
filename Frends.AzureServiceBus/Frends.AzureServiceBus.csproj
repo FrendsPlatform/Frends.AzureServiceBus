@@ -12,11 +12,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>C:\Projects\Frends.AzureServiceBus\Frends.AzureServiceBus\Frends.AzureServiceBus.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Frends.AzureServiceBus.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>C:\Projects\Frends.AzureServiceBus\Frends.AzureServiceBus\Frends.AzureServiceBus.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Frends.AzureServiceBus.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

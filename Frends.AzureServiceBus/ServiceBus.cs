@@ -158,11 +158,18 @@ namespace Frends.AzureServiceBus
         /// <summary>
         /// Get information from queues.
         /// </summary>
-        /// <returns>Object: {string Testi}</returns>
-        public static InfoOutput GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
+        /// <returns>Object: {long Count}</returns>
+        public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return new InfoOutput { Test = input.Test };
+            var manager = new ManagementClient(input.ConnectionString);
+            long count = 0;
+            foreach(var queue in input.Queues)
+            {
+                var queueInfo = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
+                count += queueInfo.MessageCount;
+            }
+            return new InfoOutput { Count = count };
         }
 
         private static async Task EnsureQueueExists(string queueName, string connectionString)

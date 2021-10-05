@@ -372,13 +372,41 @@ namespace Frends.AzureServiceBus
         public DateTime ScheduledEnqueueTimeUtc { get; set; }
     }
 
+    /// <summary>
+    /// Input class for GetQueueInfo-task.
+    /// </summary>
     public class InfoInput
     {
-        public string Test { get; set; }
+        /// <summary>
+        /// Connection string to Azure.
+        /// </summary>
+        public string ConnectionString { get; set; }
+
+        /// <summary>
+        /// Array of queues which will be fetched from Service Bus.
+        /// </summary>
+        public Queue[] Queues { get; set; }
     }
 
+    /// <summary>
+    /// One queue, which will be fetched from Service Bus.
+    /// </summary>
+    public class Queue
+    {
+        /// <summary>
+        /// Name of the queue.
+        /// </summary>
+        public string QueueName { get; set; }
+    }
+
+    /// <summary>
+    /// Output class for GetQueueInfo-task.
+    /// </summary>
     public class InfoOutput
     {
-        public string Test { get; set; }
+        /// <summary>
+        /// Sum of all messages in desired queues.
+        /// </summary>
+        public long Count { get; set; }
     }
 }

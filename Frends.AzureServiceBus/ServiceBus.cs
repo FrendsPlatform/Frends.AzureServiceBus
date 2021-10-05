@@ -20,7 +20,7 @@ namespace Frends.AzureServiceBus
     /// <summary>
     /// FRENDS ServiceBus tasks
     /// </summary>
-    public class ServiceBus
+    public static class ServiceBus
     {
         private static async Task<ReadResult> DoReadOperation(string connectionString, string path, TimeSpan timeout, bool useCached, Func<MessageReceiver, Task<ReadResult>> operation)
         {
@@ -153,6 +153,16 @@ namespace Frends.AzureServiceBus
 
                     return result;
                 }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get information from queues.
+        /// </summary>
+        /// <returns>Object: {string Testi}</returns>
+        public static InfoOutput GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return new InfoOutput { Test = input.Test };
         }
 
         private static async Task EnsureQueueExists(string queueName, string connectionString)

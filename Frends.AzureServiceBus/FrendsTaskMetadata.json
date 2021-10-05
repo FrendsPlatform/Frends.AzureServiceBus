@@ -5,6 +5,9 @@
     },
     {
       "TaskMethod": "Frends.AzureServiceBus.ServiceBus.Read"
+    },
+    {
+      "TaskMethod": "Frends.AzureServiceBus.ServiceBus.GetQueueInfo"
     }
   ]
 }

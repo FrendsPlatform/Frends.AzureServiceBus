@@ -371,4 +371,14 @@ namespace Frends.AzureServiceBus
         /// </summary>
         public DateTime ScheduledEnqueueTimeUtc { get; set; }
     }
+
+    public class InfoInput
+    {
+        public string Test { get; set; }
+    }
+
+    public class InfoOutput
+    {
+        public string Test { get; set; }
+    }
 }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,8 +21,9 @@ namespace Frends.AzureServiceBus.Tests
     {
         private string _connectionString;
         private string _queueName;
-        private string _topicName;
         private string _subscriptionName;
+        private string _queueName2;
+        private string _queueName3;
         private ManagementClient _managementClient;
         private IList<EntitySpec> entitiesToDelete;
 
@@ -44,8 +42,9 @@ namespace Frends.AzureServiceBus.Tests
         public void Setup()
         {
             _queueName = GetRandomEntityName();
-            _topicName = GetRandomEntityName();
             _subscriptionName = GetRandomEntityName();
+            _queueName2 = "frends_processlog";
+            _queueName3 = "frends_routinetriggers_default";
             entitiesToDelete = new List<EntitySpec>();
         }
 
@@ -126,7 +125,7 @@ namespace Frends.AzureServiceBus.Tests
         public async Task ShouldSendAndReceiveWithNonExistantQueue(BodySerializationType serializationType, string encoding)
         {
             var data = Path.GetTempFileName();
-            var result = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue, serializationType: serializationType, encoding:Encoding.GetEncoding(encoding));
+            _ = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue, serializationType: serializationType, encoding:Encoding.GetEncoding(encoding));
 
             var msg = await ReceiveMessage(_queueName, subscriptionName: _subscriptionName, queueOrSubscription: QueueOrSubscription.Queue, serializationType: serializationType);
 
@@ -151,7 +150,7 @@ namespace Frends.AzureServiceBus.Tests
         {
             var data = Path.GetTempFileName();
             // set wrong encoding in content type
-            var result = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue, serializationType: BodySerializationType.ByteArray, contentType: "plain/text; charset=ASCII");
+            _ = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue, serializationType: BodySerializationType.ByteArray, contentType: "plain/text; charset=ASCII");
 
             // receive and override
             var msg = await ReceiveMessage(_queueName, subscriptionName: _subscriptionName, queueOrSubscription: QueueOrSubscription.Queue, serializationType: BodySerializationType.ByteArray, predefinedEncoding: Encoding.Unicode);
@@ -182,11 +181,26 @@ namespace Frends.AzureServiceBus.Tests
             Assert.That(emptyMsg.ReceivedMessage, Is.False);
 
             var data = Path.GetTempFileName();
-            var result = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue);
+            _ = await SendMessage(_queueName, data: data, createEntity: true, queueOrTopic: QueueOrTopic.Queue);
 
             var msg = await ReceiveMessage(_queueName, subscriptionName: _subscriptionName, queueOrSubscription: QueueOrSubscription.Queue);
 
             Assert.That(msg.Content, Is.EqualTo(data));
+        }
+
+        [Test]
+        public async Task GetQueueInfoReturnsInformation()
+        {
+            Queue[] queues = { new Queue { QueueName = _queueName2 }, new Queue { QueueName = _queueName3 } };
+
+            var input = new InfoInput
+            {
+                ConnectionString = _connectionString,
+                Queues = queues
+            };
+
+            var response = await ServiceBus.GetQueueInfo(input, CancellationToken.None);
+            Assert.AreEqual(response.QueueInfos.Count, 2);
         }
     }
 }

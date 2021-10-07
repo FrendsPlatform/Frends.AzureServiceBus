@@ -20,7 +20,7 @@ namespace Frends.AzureServiceBus
     /// <summary>
     /// FRENDS ServiceBus tasks
     /// </summary>
-    public static class ServiceBus
+    public class ServiceBus
     {
         private static async Task<ReadResult> DoReadOperation(string connectionString, string path, TimeSpan timeout, bool useCached, Func<MessageReceiver, Task<ReadResult>> operation)
         {
@@ -162,6 +162,8 @@ namespace Frends.AzureServiceBus
         public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(input.ConnectionString)) throw new ArgumentException($"No connection string provided. Property: {nameof(input.ConnectionString)}");
             var manager = new ManagementClient(input.ConnectionString);
             long count = 0;
             List<QueueRuntimeInfo> runtimeInfos = new List<QueueRuntimeInfo>();

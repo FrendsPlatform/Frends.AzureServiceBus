@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.ServiceBus.InteropExtensions;
@@ -158,18 +158,20 @@ namespace Frends.AzureServiceBus
         /// <summary>
         /// Get information from queues.
         /// </summary>
-        /// <returns>Object: {long Count}</returns>
+        /// <returns>Object: {long Count, List(QueueRuntimeInfo) QueueInfos}</returns>
         public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var manager = new ManagementClient(input.ConnectionString);
             long count = 0;
+            List<QueueRuntimeInfo> runtimeInfos = new List<QueueRuntimeInfo>();
             foreach(var queue in input.Queues)
             {
                 var queueInfo = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
+                runtimeInfos.Add(queueInfo);
                 count += queueInfo.MessageCount;
             }
-            return new InfoOutput { Count = count };
+            return new InfoOutput { Count = count, QueueInfos = runtimeInfos };
         }
 
         private static async Task EnsureQueueExists(string queueName, string connectionString)

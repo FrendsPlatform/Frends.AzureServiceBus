@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Azure.ServiceBus.Management;
 
 namespace Frends.AzureServiceBus
 {
@@ -378,7 +379,7 @@ namespace Frends.AzureServiceBus
     public class InfoInput
     {
         /// <summary>
-        /// Connection string to Azure.
+        /// Connection string to Azure Service Bus namespace.
         /// </summary>
         public string ConnectionString { get; set; }
 
@@ -408,5 +409,10 @@ namespace Frends.AzureServiceBus
         /// Sum of all messages in desired queues.
         /// </summary>
         public long Count { get; set; }
+
+        /// <summary>
+        /// A list of queue runtime infos.
+        /// </summary>
+        public List<QueueRuntimeInfo> QueueInfos { get; set; }
     }
 }

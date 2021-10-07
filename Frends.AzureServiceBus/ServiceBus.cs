@@ -162,17 +162,19 @@ namespace Frends.AzureServiceBus
         public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
             if (string.IsNullOrWhiteSpace(input.ConnectionString)) throw new ArgumentException($"No connection string provided. Property: {nameof(input.ConnectionString)}");
+
             var manager = new ManagementClient(input.ConnectionString);
             long count = 0;
             List<QueueRuntimeInfo> runtimeInfos = new List<QueueRuntimeInfo>();
+
             foreach(var queue in input.Queues)
             {
                 var queueInfo = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
                 runtimeInfos.Add(queueInfo);
                 count += queueInfo.MessageCount;
             }
+
             return new InfoOutput { Count = count, QueueInfos = runtimeInfos };
         }
 

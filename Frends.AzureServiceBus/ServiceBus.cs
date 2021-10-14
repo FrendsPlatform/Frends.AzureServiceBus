@@ -166,13 +166,32 @@ namespace Frends.AzureServiceBus
 
             var manager = new ManagementClient(input.ConnectionString);
             long count = 0;
-            List<QueueRuntimeInfo> runtimeInfos = new List<QueueRuntimeInfo>();
+            List<QueueInformation> runtimeInfos = new List<QueueInformation>();
 
             foreach(var queue in input.Queues)
             {
-                var queueInfo = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
-                runtimeInfos.Add(queueInfo);
-                count += queueInfo.MessageCount;
+                var response = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
+                var messageCountResponse = response.MessageCountDetails;
+                var countDetails = new CountDetails
+                {
+                    ActiveMessageCount = messageCountResponse.ActiveMessageCount,
+                    DeadLetterMessageCount = messageCountResponse.DeadLetterMessageCount,
+                    ScheduledMessageCount = messageCountResponse.ScheduledMessageCount,
+                    TransferMessageCount = messageCountResponse.TransferMessageCount,
+                    TransferDeadLetterMessageCount = messageCountResponse.TransferDeadLetterMessageCount
+                };
+                var queueInformation = new QueueInformation
+                {
+                    Path = response.Path,
+                    MessageCount = response.MessageCount,
+                    SizeInBytes = response.SizeInBytes,
+                    MessageCountDetails = countDetails,
+                    CreatedAt = response.CreatedAt,
+                    UpdatedAt = response.UpdatedAt,
+                    AccessedAt = response.AccessedAt
+                };
+                runtimeInfos.Add(queueInformation);
+                count += queueInformation.MessageCount;
             }
 
             return new InfoOutput { Count = count, QueueInfos = runtimeInfos };

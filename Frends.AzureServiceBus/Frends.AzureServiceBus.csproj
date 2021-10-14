@@ -8,7 +8,7 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Version>1.0.1</Version>
-    <Description>New task added to get message count and information from desired Service Bus queues.</Description>
+    <Description>FRENDS Task provides support for Azure Service Bus. It does not work with Service Bus for Windows Server, use the Frends.ServiceBus Task for that</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">

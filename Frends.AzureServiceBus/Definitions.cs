@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.Azure.ServiceBus.Management;
 
 namespace Frends.AzureServiceBus
 {
@@ -413,6 +412,78 @@ namespace Frends.AzureServiceBus
         /// <summary>
         /// A list of queue runtime infos.
         /// </summary>
-        public List<QueueRuntimeInfo> QueueInfos { get; set; }
+        public List<QueueInformation> QueueInfos { get; set; }
+    }
+
+    /// <summary>
+    /// Output class to represent QueueRuntimeInfos.
+    /// </summary>
+    public class QueueInformation
+    {
+        /// <summary>
+        /// Path of the queue.
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// Count of messages in the queue.
+        /// </summary>
+        public long MessageCount { get; set; }
+
+        /// <summary>
+        /// Queue size in bytes.
+        /// </summary>
+        public long SizeInBytes { get; set; }
+
+        /// <summary>
+        /// Additional details of message count.
+        /// </summary>
+        public CountDetails MessageCountDetails { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was created.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was updated.
+        /// </summary>
+        public DateTime UpdatedAt { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was accessed last time.
+        /// </summary>
+        public DateTime AccessedAt { get; set; }
+    }
+
+    /// <summary>
+    /// Class to represent additional details about message count.
+    /// </summary>
+    public class CountDetails
+    {
+        /// <summary>
+        /// Count of active messages in the queue.
+        /// </summary>
+        public long ActiveMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of dead message in the queue.
+        /// </summary>
+        public long DeadLetterMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of scheduled messages in the queue.
+        /// </summary>
+        public long ScheduledMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of transfered messages.
+        /// </summary>
+        public long TransferMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of transfered dead messages.
+        /// </summary>
+        public long TransferDeadLetterMessageCount { get; set; }
     }
 }

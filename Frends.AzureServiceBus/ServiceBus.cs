@@ -161,7 +161,6 @@ namespace Frends.AzureServiceBus
         /// <returns>Object: {long Count, List(QueueRuntimeInfo) QueueInfos}</returns>
         public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(input.ConnectionString)) throw new ArgumentException($"No connection string provided. Property: {nameof(input.ConnectionString)}");
 
             var manager = new ManagementClient(input.ConnectionString);

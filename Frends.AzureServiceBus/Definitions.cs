@@ -371,4 +371,119 @@ namespace Frends.AzureServiceBus
         /// </summary>
         public DateTime ScheduledEnqueueTimeUtc { get; set; }
     }
+
+    /// <summary>
+    /// Input class for GetQueueInfo-task.
+    /// </summary>
+    public class InfoInput
+    {
+        /// <summary>
+        /// Connection string to Azure Service Bus namespace.
+        /// </summary>
+        public string ConnectionString { get; set; }
+
+        /// <summary>
+        /// Array of queues which will be fetched from Service Bus.
+        /// </summary>
+        public Queue[] Queues { get; set; }
+    }
+
+    /// <summary>
+    /// One queue, which will be fetched from Service Bus.
+    /// </summary>
+    public class Queue
+    {
+        /// <summary>
+        /// Name of the queue.
+        /// </summary>
+        public string QueueName { get; set; }
+    }
+
+    /// <summary>
+    /// Output class for GetQueueInfo-task.
+    /// </summary>
+    public class InfoOutput
+    {
+        /// <summary>
+        /// Sum of all messages in desired queues.
+        /// </summary>
+        public long Count { get; set; }
+
+        /// <summary>
+        /// A list of queue runtime infos.
+        /// </summary>
+        public List<QueueInformation> QueueInfos { get; set; }
+    }
+
+    /// <summary>
+    /// Output class to represent QueueRuntimeInfos.
+    /// </summary>
+    public class QueueInformation
+    {
+        /// <summary>
+        /// Path of the queue.
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// Count of messages in the queue.
+        /// </summary>
+        public long MessageCount { get; set; }
+
+        /// <summary>
+        /// Queue size in bytes.
+        /// </summary>
+        public long SizeInBytes { get; set; }
+
+        /// <summary>
+        /// Additional details of message count.
+        /// </summary>
+        public CountDetails MessageCountDetails { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was created.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was updated.
+        /// </summary>
+        public DateTime UpdatedAt { get; set; }
+
+        /// <summary>
+        /// Date and time when the queue was accessed last time.
+        /// </summary>
+        public DateTime AccessedAt { get; set; }
+    }
+
+    /// <summary>
+    /// Class to represent additional details about message count.
+    /// </summary>
+    public class CountDetails
+    {
+        /// <summary>
+        /// Count of active messages in the queue.
+        /// </summary>
+        public long ActiveMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of dead message in the queue.
+        /// </summary>
+        public long DeadLetterMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of scheduled messages in the queue.
+        /// </summary>
+        public long ScheduledMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of transfer messages in the queue.
+        /// </summary>
+        public long TransferMessageCount { get; set; }
+
+        /// <summary>
+        /// Count of dead transfer messages in the queue.
+        /// </summary>
+        public long TransferDeadLetterMessageCount { get; set; }
+    }
 }

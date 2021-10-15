@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.ServiceBus.InteropExtensions;
@@ -153,6 +153,47 @@ namespace Frends.AzureServiceBus
 
                     return result;
                 }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get information from queues. See https://github.com/FrendsPlatform/Frends.ServiceBus
+        /// </summary>
+        /// <returns>Object: {long Count, List(QueueInformation) QueueInfos}</returns>
+        public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(input.ConnectionString)) throw new ArgumentException($"No connection string provided. Property: {nameof(input.ConnectionString)}");
+
+            var manager = new ManagementClient(input.ConnectionString);
+            long count = 0;
+            List<QueueInformation> runtimeInfos = new List<QueueInformation>();
+
+            foreach(var queue in input.Queues)
+            {
+                var response = await manager.GetQueueRuntimeInfoAsync(queue.QueueName, cancellationToken);
+                var messageCountResponse = response.MessageCountDetails;
+                var countDetails = new CountDetails
+                {
+                    ActiveMessageCount = messageCountResponse.ActiveMessageCount,
+                    DeadLetterMessageCount = messageCountResponse.DeadLetterMessageCount,
+                    ScheduledMessageCount = messageCountResponse.ScheduledMessageCount,
+                    TransferMessageCount = messageCountResponse.TransferMessageCount,
+                    TransferDeadLetterMessageCount = messageCountResponse.TransferDeadLetterMessageCount
+                };
+                var queueInformation = new QueueInformation
+                {
+                    Path = response.Path,
+                    MessageCount = response.MessageCount,
+                    SizeInBytes = response.SizeInBytes,
+                    MessageCountDetails = countDetails,
+                    CreatedAt = response.CreatedAt,
+                    UpdatedAt = response.UpdatedAt,
+                    AccessedAt = response.AccessedAt
+                };
+                runtimeInfos.Add(queueInformation);
+                count += queueInformation.MessageCount;
+            }
+
+            return new InfoOutput { Count = count, QueueInfos = runtimeInfos };
         }
 
         private static async Task EnsureQueueExists(string queueName, string connectionString)

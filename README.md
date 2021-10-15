@@ -127,7 +127,46 @@ object
 | Size                     | long                      | The size of the received message                     |
 | State                    | string                    | The state of the received message                    |
 | To                       | string                    | The to header value of the received message          |
-| ScheduledEnqueueTimeUtc | DateTime   | The time when the message was scheduled to be queued|
+| ScheduledEnqueueTimeUtc  | DateTime                  | The time when the message was scheduled to be queued |
+
+### ServiceBus.GetQueueInfo
+Get message count and queue information from desires queues.
+
+#### Input
+
+| Property         | Type          | Description                                                                             |
+| ---------------- | ------------- | --------------------------------------------------------------------------------------- |
+| ConnectionString | string        | Connection string to the Service Bus namespace.                                         |
+| Queues           | Array(string) | Array of queue names from which the message count and information will be fetched from. |
+
+#### Result
+object
+
+| Property/Method | Type         | Description                                         |
+| --------------- | ------------ | --------------------------------------------------- |
+| Count           | long         | Sum of message counts of all desired queues.        |
+| QueueInfos      | List(Object) | List of individual queues informations (see below). |
+
+QueueInfo-object
+| Property/Method     | Type     | Description                                               |
+| ------------------- | -------- | --------------------------------------------------------- |
+| Path                | string   | Path of the queue.                                        |
+| MessageCount        | long     | Count of messages in the queue.                           |
+| SizeInBytes         | long     | Queue size in bytes.                                      |
+| MessageCountDetails | Object   | Detailed information about the message count (see below). |
+| CreatedAt           | DateTime | Date and time when the queue was created.                 |
+| UpdatedAt           | DateTime | Date and time when the queue was updated.                 |
+| AccessedAt          | DateTime | Date and time when the queue was last time accessed.      |
+
+MessageCountDetails-object
+| Property/Method                | Type | Description                                   |
+| ------------------------------ | ---- | --------------------------------------------- |
+| ActiveMessageCount             | long | Count of active messages in the queue.        |
+| DeadLetterMessageCount         | long | Count of dead messages in the queue.          |
+| SchduledMessageCount           | long | Count of scheduled messages in the queue.     |
+| TransferMessageCount           | long | Count of transfer messages in the queue.      |
+| TransferDeadLetterMessageCount | long | Count of dead transfer messages in the queue. |
+
 
 ## License
 

@@ -477,12 +477,12 @@ namespace Frends.AzureServiceBus
         public long ScheduledMessageCount { get; set; }
 
         /// <summary>
-        /// Count of transfered messages.
+        /// Count of transfer messages in the queue.
         /// </summary>
         public long TransferMessageCount { get; set; }
 
         /// <summary>
-        /// Count of transfered dead messages.
+        /// Count of dead transfer messages in the queue.
         /// </summary>
         public long TransferDeadLetterMessageCount { get; set; }
     }

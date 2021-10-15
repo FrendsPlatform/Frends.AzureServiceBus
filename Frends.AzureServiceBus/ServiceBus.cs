@@ -156,9 +156,9 @@ namespace Frends.AzureServiceBus
         }
 
         /// <summary>
-        /// Get information from queues.
+        /// Get information from queues. See https://github.com/FrendsPlatform/Frends.ServiceBus
         /// </summary>
-        /// <returns>Object: {long Count, List(QueueRuntimeInfo) QueueInfos}</returns>
+        /// <returns>Object: {long Count, List(QueueInformation) QueueInfos}</returns>
         public static async Task<InfoOutput> GetQueueInfo([PropertyTab]InfoInput input, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(input.ConnectionString)) throw new ArgumentException($"No connection string provided. Property: {nameof(input.ConnectionString)}");

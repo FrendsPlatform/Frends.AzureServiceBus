@@ -43,8 +43,8 @@ namespace Frends.AzureServiceBus.Tests
         {
             _queueName = GetRandomEntityName();
             _subscriptionName = GetRandomEntityName();
-            _queueName2 = "frends_processlog";
-            _queueName3 = "frends_routinetriggers_default";
+            _queueName2 = "testqueue1";
+            _queueName3 = "testqueue2";
             entitiesToDelete = new List<EntitySpec>();
         }
 
@@ -191,6 +191,11 @@ namespace Frends.AzureServiceBus.Tests
         [Test]
         public async Task GetQueueInfoReturnsInformation()
         {
+            await _managementClient.CreateQueueAsync(_queueName2);
+            await _managementClient.CreateQueueAsync(_queueName3);
+            entitiesToDelete.Add(new EntitySpec { EntityType = QueueOrTopic.Queue, Name = _queueName2 });
+            entitiesToDelete.Add(new EntitySpec { EntityType = QueueOrTopic.Queue, Name = _queueName3 });
+
             Queue[] queues = { new Queue { QueueName = _queueName2 }, new Queue { QueueName = _queueName3 } };
 
             var input = new InfoInput
